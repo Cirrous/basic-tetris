@@ -67,6 +67,16 @@ let random = Math.floor(Math.random()*tetrominos.length)
   //Läst das Tetromino jede Sekunde ein Block runterfallen
   timerId = setInterval(moveDown ,  1000)
 
+
+  //Deklariert die Steuerung
+  function control(e){
+    if (e.keyCode === 65 || e.keyCode === 37) {moveLeft()}
+    else if (e.keyCode === 68 || e.keyCode === 39) {moveRight()}
+    else if (e.keyCode === 83 || e.keyCode === 40) {moveDown()}
+    else if (e.keyCode === 87 || e.keyCode === 38) {rotate()}
+}
+document.addEventListener('keydown', control)
+
   //Logik für das runterfallen des Tetrominos
   function moveDown(){
     undraw()
@@ -85,5 +95,42 @@ function freeze(){
         currentPosition = 4
         draw()
     }
+}
+
+//Lässt das Tetromino nach links bewägen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
+function moveLeft(){
+    undraw()
+    const isAtLeftEdge = tetromino.some(square => (currentPosition + square) % gridSpacing === 0)
+
+    if (!isAtLeftEdge) currentPosition -=1
+
+    if(tetromino.some(square => field[currentPosition + square].classList.contains('taken'))){
+currentPosition +=1
+}
+draw()
+}
+
+//Lässt das Tetromino nach rechts bewägen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
+function moveRight(){
+    undraw()
+    const isAtRightEdge = tetromino.some(square => (currentPosition + square) % gridSpacing === gridSpacing-1)
+
+    if (!isAtRightEdge) currentPosition +=1
+
+    if(tetromino.some(square => field[currentPosition + square].classList.contains('taken'))){
+currentPosition -=1
+}
+draw()
+}
+
+//Lässt das Tetromino rotieren
+function rotate(){
+undraw()
+currentRotation ++
+if(currentRotation === tetromino.length){ //Lässt den Wert bei 4 zurück auf 0 springen
+    currentRotation = 0
+}
+tetromino = tetrominos[random][currentRotation]
+draw()
 }
 })
