@@ -1,3 +1,11 @@
+.tetromino {
+    background-color: blue;
+}
+
+.container{
+    display:flex;
+}
+
 .grid {
     width: 200px;
     height: 400px;
@@ -13,6 +21,17 @@
    
 }
 
-.tetromino {
-    background-color: blue;
+.next-Tetromino-Grid {
+    margin-left: 50px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: cyan;
 }
+
+.next-Tetromino-Grid div{
+    width: 20px;
+    height: 20px;
+}
+
