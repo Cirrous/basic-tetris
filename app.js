@@ -4,6 +4,8 @@ let field = Array.from(document.querySelectorAll('.grid div'))
 const scoreDisplay =document.querySelector('#score')
 const startButton =document.querySelector('#start-button')
 const displayWidth = 10
+let timerId 
+let score = 0
 
 //Tetrominos
 const lTetromino = [
@@ -64,10 +66,6 @@ let random = Math.floor(Math.random()*tetrominos.length)
     })
   }
 
-  //Läst das Tetromino jede Sekunde ein Block runterfallen
-  timerId = setInterval(moveDown ,  1000)
-
-
   //Deklariert die Steuerung
   function control(e){
     if (e.keyCode === 65 || e.keyCode === 37) {moveLeft()}
@@ -96,10 +94,12 @@ function freeze(){
         currentPosition = 4
         draw()
         displayShape()
+        addScore()
+        gameOver()
     }
 }
 
-//Lässt das Tetromino nach links bewägen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
+//Lässt das Tetromino nach links bewegen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
 function moveLeft(){
     undraw()
     const isAtLeftEdge = tetromino.some(square => (currentPosition + square) % displayWidth === 0)
@@ -112,7 +112,7 @@ currentPosition +=1
 draw()
 }
 
-//Lässt das Tetromino nach rechts bewägen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
+//Lässt das Tetromino nach rechts bewegen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
 function moveRight(){
     undraw()
     const isAtRightEdge = tetromino.some(square => (currentPosition + square) % displayWidth === displayWidth-1)
@@ -158,5 +158,45 @@ function displayShape(){
     upNextTetrominos[nextRandom].forEach(square => {
         displaySquares[displayIndex + square].classList.add('tetromino')
     })
+}
+
+//Startet oder pausiert das Spiel
+startButton.addEventListener('click' , () => {
+    if (timerId) {
+        clearInterval(timerId)
+        timerId = null 
+    } else {
+        draw()
+        timerId = setInterval(moveDown, 1000)
+        nextRandom = Math.floor(Math.random()*tetrominos.length)
+        displayShape
+    }
+})
+
+//Wenn eine ganze Reihe gefüllt ist verschwindet diese und der Score geht hoch
+function addScore(){
+    for (let i = 0; i< 199; i+=displayWidth){
+        const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9,]
+
+        if(row.every(square => field[square].classList.contains('taken'))) {
+            score += 100
+            scoreDisplay.innerHTML = score
+            row.forEach(square => {
+                field[square].classList.remove('taken')
+                field[square].classList.remove('tetromino')
+            })
+            const squaresRemoved = field.splice(i, displayWidth)
+            field = squaresRemoved.concat(field)
+            field.forEach(cell => grid.appendChild(cell))
+        }
+    }
+}
+
+//game Over Bildschirm
+function gameOver(){
+    if (tetromino.some(square => field[currentPosition+square].classList.contains('taken'))){
+    scoreDisplay.innerHTML = 'end'
+    clearInterval(timerId)
+    }
 }
 })
