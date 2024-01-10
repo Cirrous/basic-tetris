@@ -77,10 +77,10 @@ let random = Math.floor(Math.random()*tetrominos.length)
 
   //Deklariert die Steuerung
   function control(e){
-    if (e.keyCode === 65 || e.keyCode === 37) {moveLeft()}
-    else if (e.keyCode === 68 || e.keyCode === 39) {moveRight()}
-    else if (e.keyCode === 83 || e.keyCode === 40) {moveDown()}
-    else if (e.keyCode === 87 || e.keyCode === 38) {rotate()}
+    if (e.keyCode === 65 && (timerId)|| e.keyCode === 37 && (timerId)) {moveLeft()}
+    else if (e.keyCode === 68 && (timerId)|| e.keyCode === 39&& (timerId)) {moveRight()}
+    else if (e.keyCode === 83 && (timerId)|| e.keyCode === 40&& (timerId)) {moveDown()}
+    else if (e.keyCode === 87 && (timerId)|| e.keyCode === 38&& (timerId)) {rotate()}
 }
 document.addEventListener('keydown', control)
 
@@ -103,9 +103,9 @@ function freeze(){
         nextRandom = Math.floor(Math.random()*tetrominos.length)
         tetromino = tetrominos[random][currentRotation]
         currentPosition = 4
+        addScore()
         draw()
         displayShape()
-        addScore()
         gameOver()
 }
 
