@@ -6,7 +6,14 @@ const startButton =document.querySelector('#start-button')
 const displayWidth = 10
 let timerId 
 let score = 0
+const colors = [
+    'orange',
+    'red',
+    'purple',
+    'yellow',
+    'blue'
 
+]
 //Tetrominos
 const lTetromino = [
     [1, displayWidth + 1, displayWidth * 2 + 1, 2],
@@ -56,6 +63,7 @@ let random = Math.floor(Math.random()*tetrominos.length)
   function draw(){
     tetromino.forEach(square => {
         field[currentPosition + square].classList.add('tetromino')
+        field[currentPosition +square].style.backgroundColor = colors[random]
     })
   }
 
@@ -63,6 +71,7 @@ let random = Math.floor(Math.random()*tetrominos.length)
   function undraw(){
     tetromino.forEach(square =>{
         field[currentPosition + square].classList.remove('tetromino')
+        field[currentPosition +square].style.backgroundColor =''
     })
   }
 
@@ -77,16 +86,18 @@ document.addEventListener('keydown', control)
 
   //Logik für das runterfallen des Tetrominos
   function moveDown(){
+    if(!tetromino.some(square => field[currentPosition + square + displayWidth].classList.contains('taken'))) {
     undraw()
     currentPosition += displayWidth 
     draw()
+    } else {
     freeze()
+    }
   }
 
 //Lässt das Tetromino einfrieren wenn es den Boden oder ein anderes Tetromino trifft
 function freeze(){
-    if(tetromino.some(square => field[currentPosition + square + displayWidth].classList.contains('taken'))){
-        tetromino.forEach(square =>field[currentPosition + square].classList.add('taken'))
+    tetromino.forEach(square => field[currentPosition + square].classList.add('taken'))
         //Lässt das nächste Tetromino fallen
         random = nextRandom
         nextRandom = Math.floor(Math.random()*tetrominos.length)
@@ -96,7 +107,6 @@ function freeze(){
         displayShape()
         addScore()
         gameOver()
-    }
 }
 
 //Lässt das Tetromino nach links bewegen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
@@ -139,7 +149,7 @@ draw()
 //Logik für t das nächste Tetromino in der Box neben dem Spielfeld an
 const displaySquares = document.querySelectorAll('.next-Tetromino-Grid div')
 const displayTetWidth = 4
-let displayIndex = 0
+const displayIndex = 0
 
 //Liste mit Tetrominos die als nächstes rankommen können (unrotiert)
 const upNextTetrominos = [
@@ -154,9 +164,11 @@ const upNextTetrominos = [
 function displayShape(){
     displaySquares.forEach(square =>{
         square.classList.remove('tetromino')
+        square.style.backgroundColor = ''
     })
     upNextTetrominos[nextRandom].forEach(square => {
         displaySquares[displayIndex + square].classList.add('tetromino')
+        displaySquares[displayIndex + square].style.backgroundColor = colors[nextRandom]
     })
 }
 
@@ -184,6 +196,7 @@ function addScore(){
             row.forEach(square => {
                 field[square].classList.remove('taken')
                 field[square].classList.remove('tetromino')
+                field[square].style.backgroundColor = ''
             })
             const squaresRemoved = field.splice(i, displayWidth)
             field = squaresRemoved.concat(field)
