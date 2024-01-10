@@ -1,37 +1,46 @@
+body {
+    background-color: rgba(0, 255, 0, 0.083); /* Hier kannst du die Farbe und die Transparenz anpassen */
+   
+  }
+
 .tetromino {
     background-color: blue;
 }
 
 .container{
     display:flex;
+    justify-content: center; /* horizontal zentrieren */
+    align-items: center; /* vertikal zentrieren */
+   
 }
 
 .grid {
-    width: 200px;
-    height: 400px;
+    width: 400px;
+    height: 800px;
     display: flex;
     flex-wrap: wrap;
-    background-color: cyan;
+    background-color: rgba(0, 208, 255, 0.45);
 
 }
 
 .grid div {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
    
 }
 
 .next-Tetromino-Grid {
-    margin-left: 50px;
-    width: 80px;
-    height: 80px;
+    margin-left: 100px;
+    margin-bottom: 640px;
+    width: 160px;
+    height: 160px;
     display: flex;
     flex-wrap: wrap;
-    background-color: cyan;
+    background-color: rgba(0, 208, 255, 0.45);
 }
 
 .next-Tetromino-Grid div{
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
 }
 

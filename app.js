@@ -6,6 +6,7 @@ const startButton =document.querySelector('#start-button')
 const displayWidth = 10
 let timerId 
 let score = 0
+var playAudio = true
 const colors = [
     'orange',
     'red',
@@ -55,6 +56,7 @@ const zTetromino = [
   let currentPosition = 4
   let currentRotation = 0
   let nextRandom = 0
+
 //Wählt einen zufälligen Tetromino unrotiert aus
 let random = Math.floor(Math.random()*tetrominos.length)
   let tetromino = tetrominos[random][currentRotation]
@@ -84,7 +86,7 @@ let random = Math.floor(Math.random()*tetrominos.length)
 }
 document.addEventListener('keydown', control)
 
-  //Logik für das runterfallen des Tetrominos
+  //Logik für das Runterfallen des Tetrominos
   function moveDown(){
     if(!tetromino.some(square => field[currentPosition + square + displayWidth].classList.contains('taken'))) {
     undraw()
@@ -95,7 +97,7 @@ document.addEventListener('keydown', control)
     }
   }
 
-//Lässt das Tetromino einfrieren wenn es den Boden oder ein anderes Tetromino trifft
+//Lässt das Tetromino einfrieren, wenn es den Boden oder ein anderes Tetromino trifft
 function freeze(){
     tetromino.forEach(square => field[currentPosition + square].classList.add('taken'))
         //Lässt das nächste Tetromino fallen
@@ -109,7 +111,7 @@ function freeze(){
         gameOver()
 }
 
-//Lässt das Tetromino nach links bewegen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
+//Lässt das Tetromino nach links bewegen, es sei denn ein Block oder das Ende des Spielfeldes ist im Weg
 function moveLeft(){
     undraw()
     const isAtLeftEdge = tetromino.some(square => (currentPosition + square) % displayWidth === 0)
@@ -122,7 +124,7 @@ currentPosition +=1
 draw()
 }
 
-//Lässt das Tetromino nach rechts bewegen, es sei den ein Block oder das Ende des Spielfeldes ist im Weg
+//Lässt das Tetromino nach rechts bewegen, es sei denn ein Block oder das Ende des Spielfeldes ist im Weg
 function moveRight(){
     undraw()
     const isAtRightEdge = tetromino.some(square => (currentPosition + square) % displayWidth === displayWidth-1)
@@ -146,7 +148,7 @@ tetromino = tetrominos[random][currentRotation]
 draw()
 }
 
-//Logik für t das nächste Tetromino in der Box neben dem Spielfeld an
+//Logik für das nächste Tetromino in der Box neben dem Spielfeld anzeigen
 const displaySquares = document.querySelectorAll('.next-Tetromino-Grid div')
 const displayTetWidth = 4
 const displayIndex = 0
@@ -181,11 +183,19 @@ startButton.addEventListener('click' , () => {
         draw()
         timerId = setInterval(moveDown, 1000)
         nextRandom = Math.floor(Math.random()*tetrominos.length)
-        displayShape
+        displayShape()
     }
+    //Spielt die Hintergrundmusik ab
+    if (playAudio){
+    var audio = new Audio("musik/tetris_theme.mp3")
+    audio.loop = true
+    audio.volume = 0.05
+    audio.play();
+    playAudio = false
+}
 })
 
-//Wenn eine ganze Reihe gefüllt ist verschwindet diese und der Score geht hoch
+//Wenn eine ganze Reihe gefüllt ist, verschwindet diese und der Score wird erhöht
 function addScore(){
     for (let i = 0; i< 199; i+=displayWidth){
         const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9,]
@@ -205,11 +215,12 @@ function addScore(){
     }
 }
 
-//game Over Bildschirm
+//Game Over Bildschirm
 function gameOver(){
     if (tetromino.some(square => field[currentPosition+square].classList.contains('taken'))){
     scoreDisplay.innerHTML = 'end'
     clearInterval(timerId)
     }
 }
+
 })
