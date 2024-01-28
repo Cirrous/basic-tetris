@@ -8,12 +8,11 @@ let timerId
 let score = 0
 var playAudio = true
 const colors = [
-    'orange',
-    'red',
-    'purple',
-    'yellow',
-    'blue'
-
+  'url(images/blue_block.png)',
+  'url(images/pink_block.png)',
+  'url(images/purple_block.png)',
+  'url(images/peach_block.png)',
+  'url(images/yellow_block.png)'
 ]
 //Tetrominos
 const lTetromino = [
@@ -65,7 +64,7 @@ let random = Math.floor(Math.random()*tetrominos.length)
   function draw(){
     tetromino.forEach(square => {
         field[currentPosition + square].classList.add('tetromino')
-        field[currentPosition +square].style.backgroundColor = colors[random]
+        field[currentPosition +square].style.backgroundImage = colors[random]
     })
   }
 
@@ -73,7 +72,7 @@ let random = Math.floor(Math.random()*tetrominos.length)
   function undraw(){
     tetromino.forEach(square =>{
         field[currentPosition + square].classList.remove('tetromino')
-        field[currentPosition +square].style.backgroundColor =''
+        field[currentPosition +square].style.backgroundImage ='none'
     })
   }
 
@@ -111,6 +110,15 @@ function freeze(){
         gameOver()
 }
 
+// Funktion, um das Tetromino sofort nach unten zu bewegen (Funktioniert noch nicht richtig)
+function instantDrop() {
+    while (!tetromino.some(square => field[currentPosition + square + displayWidth].classList.contains('taken'))) {
+      undraw();
+      currentPosition += displayWidth;
+      draw();
+    }
+    freeze();
+  }
 //Lässt das Tetromino nach links bewegen, es sei denn ein Block oder das Ende des Spielfeldes ist im Weg
 function moveLeft(){
     undraw()
@@ -138,14 +146,21 @@ draw()
 }
 
 //Lässt das Tetromino rotieren
-function rotate(){
-undraw()
-currentRotation ++
-if(currentRotation === tetromino.length){ //Lässt den Wert bei 4 zurück auf 0 springen
-    currentRotation = 0
-}
-tetromino = tetrominos[random][currentRotation]
-draw()
+function rotate() {
+
+  const isAtLeftEdge = tetromino.some(square => (currentPosition + square) % displayWidth === 0);
+  const isAtRightEdge = tetromino.some(square => (currentPosition + square) % displayWidth === (displayWidth - 1));
+
+  if (!(isAtLeftEdge | isAtRightEdge)) {
+      undraw();
+      currentRotation++;
+      if (currentRotation === tetromino.length) {
+          //if currentRotation value is greater that 4 than reset same to 0
+          currentRotation = 0;
+      }
+      tetromino = tetrominos[random][currentRotation];
+  }
+  draw();
 }
 
 //Logik für das nächste Tetromino in der Box neben dem Spielfeld anzeigen
@@ -166,11 +181,11 @@ const upNextTetrominos = [
 function displayShape(){
     displaySquares.forEach(square =>{
         square.classList.remove('tetromino')
-        square.style.backgroundColor = ''
+        square.style.backgroundImage = 'none'
     })
     upNextTetrominos[nextRandom].forEach(square => {
         displaySquares[displayIndex + square].classList.add('tetromino')
-        displaySquares[displayIndex + square].style.backgroundColor = colors[nextRandom]
+        displaySquares[displayIndex + square].style.backgroundImage = colors[nextRandom]
     })
 }
 
@@ -187,6 +202,7 @@ startButton.addEventListener('click' , () => {
     }
     //Spielt die Hintergrundmusik ab
     if (playAudio){
+      
     var audio = new Audio("musik/tetris_theme.mp3")
     audio.loop = true
     audio.volume = 0.05
@@ -206,7 +222,7 @@ function addScore(){
             row.forEach(square => {
                 field[square].classList.remove('taken')
                 field[square].classList.remove('tetromino')
-                field[square].style.backgroundColor = ''
+                field[square].style.backgroundImage = 'none'
             })
             const squaresRemoved = field.splice(i, displayWidth)
             field = squaresRemoved.concat(field)

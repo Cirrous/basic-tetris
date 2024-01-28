@@ -1,10 +1,11 @@
 body {
-    background-color: rgba(0, 255, 0, 0.083); /* Hier kannst du die Farbe und die Transparenz anpassen */
+    background-color: rgba(0, 255, 0, 0.083); 
    
-  }
+}
 
 .tetromino {
-    background-color: blue;
+    background-color:  rgba(0, 208, 255, 0.141);
+    background-size: cover;
 }
 
 .container{
@@ -19,7 +20,7 @@ body {
     height: 800px;
     display: flex;
     flex-wrap: wrap;
-    background-color: rgba(0, 208, 255, 0.45);
+    background-color: rgba(0, 208, 255, 0.141);
 
 }
 
@@ -36,11 +37,39 @@ body {
     height: 160px;
     display: flex;
     flex-wrap: wrap;
-    background-color: rgba(0, 208, 255, 0.45);
+    background-color: rgba(0, 208, 255, 0.141);
 }
 
 .next-Tetromino-Grid div{
     width: 40px;
-    height: 40px;
+    height: 40px;   
 }
+
+#start-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+}
+
+#start-button:hover {
+  background-color: #45a049;
+}
+
+#score {
+    font-family: Arial, sans-serif;
+    font-size: 34px;
+    color: #ffcc00;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+
+  
 
